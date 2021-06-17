@@ -73,7 +73,7 @@ module.exports = {
     try {
       const { id } = req.params
       const setData = {
-        user_verified: 1
+        user_verified: '1'
       }
       const getUserId = await authModel.getUserDataConditions(id)
       await authModel.updateverifiedUser(setData, id)
