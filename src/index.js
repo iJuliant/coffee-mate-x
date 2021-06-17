@@ -5,8 +5,7 @@ const cors = require('cors')
 const express = require('express')
 const helmet = require('helmet')
 const morgan = require('morgan')
-const path = require('path')
-const port = process.env.port
+const port = process.env.DB_PORT
 const routerNavigation = require('./routes')
 
 const app = express()
@@ -18,7 +17,7 @@ app.options('*', cors()) // all access cors.
 app.use(helmet())
 app.use(morgan('dev'))
 app.use('/backend5/api/v1', routerNavigation)
-app.use('/backend5/api', express.static(path.join(__dirname, 'uploads')))
+app.use('/backend5/api', express.static('src/uploads'))
 
 app.listen(port, () => {
   console.log(`App is listening on port ${port}`)
