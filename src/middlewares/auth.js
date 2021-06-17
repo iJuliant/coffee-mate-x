@@ -18,7 +18,7 @@ module.exports = {
           next()
         }
         console.log(error)
-        console.log(result)
+        // console.log(result)
       })
     } else {
       return helper.response(res, 403, 'You need to login first')
