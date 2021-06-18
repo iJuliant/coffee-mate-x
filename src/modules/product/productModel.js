@@ -55,5 +55,31 @@ module.exports = {
         }
       )
     })
+  },
+  getDataByCategory: (category, limit, offset, orderBy) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        `SELECT * FROM product WHERE product_category = ? ORDER BY product_name ${orderBy} LIMIT ? OFFSET ?`,
+        [category, limit, offset],
+        (error, result) => {
+          !error
+            ? resolve(result)
+            : reject(new Error(error))
+        }
+      )
+    })
+  },
+  countData: (category) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        'SELECT COUNT(*) AS total FROM product WHERE product_category = ?',
+        category,
+        (error, result) => {
+          !error
+            ? resolve(result[0].total)
+            : reject(new Error(error))
+        }
+      )
+    })
   }
 }

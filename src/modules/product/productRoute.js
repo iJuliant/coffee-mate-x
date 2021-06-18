@@ -5,17 +5,34 @@ const productController = require('./productController')
 
 Route.get(
   '/',
-  productController.getDataAll)
+  productController.getDataAll
+)
+
 Route.get(
-  '/:id',
-  productController.getDataById)
+  '/by-id/:id',
+  productController.getDataById
+)
+
 Route.patch(
   '/img/:id',
   uploadFile,
-  productController.updateImage)
+  productController.updateImage
+)
+
 Route.post(
   '/',
   uploadFile,
-  productController.postProduct)
+  productController.postProduct
+)
+
+Route.get(
+  '/category/',
+  productController.getCategory
+)
+
+Route.delete(
+  '/:id',
+  productController.deleteProduct
+)
 
 module.exports = Route
