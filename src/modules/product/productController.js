@@ -118,18 +118,19 @@ module.exports = {
   },
   deleteProduct: async (req, res) => {
     try {
-      const { id } = req.query
+      const { id } = req.params
 
       const isExist = await productModel.getDataById(id)
 
       if (isExist.length === 0) {
         return helper.response(res, 404, 'Cannot delete empty data')
       } else {
-        const result = await productModel.deleteProduct(id)
+        const result = await productModel.deleteData(id)
 
         return helper.response(res, 200, `Success delete product id ${id}`, result)
       }
     } catch (error) {
+      console.log(error)
       return helper.response(res, 400, 'Bad request', error)
     }
   }
