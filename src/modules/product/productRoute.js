@@ -13,5 +13,9 @@ Route.patch(
   '/img/:id',
   uploadFile,
   productController.updateImage)
+Route.post(
+  '/',
+  uploadFile,
+  productController.postProduct)
 
 module.exports = Route

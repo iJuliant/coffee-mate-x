@@ -19,6 +19,24 @@ module.exports = {
       )
     })
   },
+  createData: (setData) => {
+    return new Promise((resolve, reject) => {
+      connection.query('INSERT INTO product SET ?', setData, (error, result) => {
+        // !error ? resolve({id: result.inserId, ...setData}) : reject(new Error(error))
+        // console.log(error);
+        if (!error) {
+          const newResult = {
+            id: result.insertId,
+            ...setData
+          }
+          resolve(newResult)
+        } else {
+          // console.log(error)
+          reject(new Error(error))
+        }
+      })
+    })
+  },
   updateData: (setData, id) => {
     return new Promise((resolve, reject) => {
       connection.query(

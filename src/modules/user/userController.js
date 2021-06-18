@@ -53,5 +53,55 @@ module.exports = {
       // return helper.response(res, 400, 'Bad Request', error)
       console.log(error)
     }
+  },
+  updateData: async (req, res) => {
+    try {
+      const { id } = req.params
+      const getDataId = await userModel.getDataById(id)
+      // console.log(getDataId[0])
+      let { userName, userPhone, userAddress, userGender, userBirth } = req.body
+      console.log(req.body)
+      if (userName === '') {
+        userName = getDataId[0].user_name
+      }
+      if (userPhone === '') {
+        userPhone = getDataId[0].user_phone
+      }
+      if (userAddress === '') {
+        userAddress = getDataId[0].user_address
+      }
+      if (userGender === 'Male') {
+        userGender = 'Male'
+      }
+      if (userGender === 'Female') {
+        userGender = 'Female'
+      }
+      if (userBirth === '') {
+        userBirth = getDataId[0].user_birth
+      }
+
+      const setData = {
+        user_name: userName,
+        user_phone: userPhone,
+        user_address: userAddress,
+        user_gender: userGender,
+        user_birth: userBirth,
+        user_updated_at: new Date(Date.now())
+      }
+      if (getDataId.length > 0) {
+        const result = await userModel.updateData(setData, id)
+        return helper.response(
+          res,
+          200,
+          `Success Update Data by id ${id}`,
+          result
+        )
+      } else {
+        return helper.response(res, 404, `Data by id ${id}, not Found`, null)
+      }
+    } catch (error) {
+      return helper.response(res, 400, 'Bad Request', error)
+      // console.log(error)
+    }
   }
 }

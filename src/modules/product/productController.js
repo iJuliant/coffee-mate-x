@@ -31,6 +31,28 @@ module.exports = {
       console.log(error)
     }
   },
+  postProduct: async (req, res) => {
+    try {
+      const {
+        productName,
+        productPrice,
+        productCategory,
+        productDesc
+      } = req.body
+      const setData = {
+        product_name: productName,
+        product_base_price: productPrice,
+        product_category: productCategory,
+        product_desc: productDesc,
+        product_updated_at: new Date(Date.now())
+      }
+      console.log(setData)
+      const result = await productModel.createData(setData)
+      return helper.response(res, 200, 'Succes Create Product', result)
+    } catch (error) {
+      return helper.response(res, 400, 'Bad Request', error)
+    }
+  },
   updateImage: async (req, res) => {
     try {
       const { id } = req.params
