@@ -1,9 +1,38 @@
 const express = require('express')
 const Route = express.Router()
-// const uploadFile = require('../../middleware/uploads')
-
+const uploadFile = require('../../middlewares/uploads')
 const productController = require('./productController')
 
-Route.get('/:id', productController.getDataById)
+Route.get(
+  '/',
+  productController.getDataAll
+)
+
+Route.get(
+  '/by-id/:id',
+  productController.getDataById
+)
+
+Route.patch(
+  '/img/:id',
+  uploadFile,
+  productController.updateImage
+)
+
+Route.post(
+  '/',
+  uploadFile,
+  productController.postProduct
+)
+
+Route.get(
+  '/category/',
+  productController.getCategory
+)
+
+Route.delete(
+  '/:id',
+  productController.deleteProduct
+)
 
 module.exports = Route
