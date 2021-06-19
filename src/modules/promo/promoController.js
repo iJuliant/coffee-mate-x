@@ -93,29 +93,10 @@ module.exports = {
         return helper.response(res, 404, `Failed! Data by id ${id} Not Found`)
       }
     } catch (error) {
-      // return helper.response(res, 400, 'Bad Request', error)
-      console.log(error)
+      return helper.response(res, 400, 'Bad Request', error)
+      // console.log(error)
     }
   },
-  // getDataByIdByCondition: async (req, res) => {
-  //   try {
-  //     const { id, idd } = req.params
-  //     // const resultpromo = await promoModel.getDataById(id)
-  //     const resultproduct = await promoModel.getDataByIdCondition(id, idd)
-  //     if (resultproduct.length > 0) {
-  //       // if (resultpromo[0].promo_type === resultproduct[0].product_category) {
-  //       // console.log('ucces')
-  //       // }
-  //       return helper.response(res, 200, 'Success Get Promo', resultproduct)
-  //       // client.set(`getUserid:${id}`, JSON.stringify(result))
-  //     } else {
-  //       return helper.response(res, 404, 'Failed! Promo Tidak Sesuai')
-  //     }
-  //   } catch (error) {
-  //     // return helper.response(res, 400, 'Bad Request', error)
-  //     console.log(error)
-  //   }
-  // },
   updateData: async (req, res) => {
     try {
       const { id } = req.params
@@ -183,6 +164,32 @@ module.exports = {
     } catch (error) {
       return helper.response(res, 400, 'Bad Request', error)
       // console.log(error)
+    }
+  },
+  deletePromo: async (req, res) => {
+    try {
+      const { id } = req.params
+      const Result = await promoModel.getDataById(id)
+      console.log(Result[0].promo_image)
+      if (Result.length > 0) {
+        console.log(`Delete data by id = ${id}`)
+        const result = await promoModel.deleteData(id)
+        fs.stat(`src/uploads/${Result[0].promo_image}`, function (err, stats) {
+          console.log(stats) // here we got all information of file in stats variable
+          if (err) {
+            return console.error(err)
+          }
+          fs.unlink(`src/uploads/${Result[0].promo_image}`, function (err) {
+            if (err) return console.log(err)
+            console.log('file deleted successfully')
+          })
+        })
+        return helper.response(res, 200, `Success Delete By Id = ${id}`, result)
+      } else {
+        return helper.response(res, 404, `Data By id ${id} Not Found !`, null)
+      }
+    } catch (error) {
+      return helper.response(res, 400, 'Bad Request', error)
     }
   }
 }

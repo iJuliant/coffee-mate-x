@@ -55,5 +55,13 @@ module.exports = {
         }
       })
     })
+  },
+  deleteData: (id) => {
+    return new Promise((resolve, reject) => {
+      connection.query('DELETE FROM promo WHERE promo_id = ?', id, (error, result) => {
+        !error ? resolve(result) : reject(new Error(error))
+      }
+      )
+    })
   }
 }
