@@ -27,9 +27,12 @@ module.exports = {
         )
       } else {
         const setData = {
+          user_display_name: 'user',
           user_phone: userPhone,
           user_email: userEmail,
-          user_password: encryptPassword
+          user_name: 'Set your name',
+          user_password: encryptPassword,
+          user_role: 'user'
         }
         // console.log(setData)
         const transporter = nodemailer.createTransport({
@@ -46,10 +49,10 @@ module.exports = {
         delete result.user_password
 
         const mailOption = {
-          from: '"CoffeShop - Matte" <putericky@gmail.com>', // sender address
+          from: '"Coffe Matte" <putericky@gmail.com>', // sender address
           to: userEmail, // list of receivers
-          subject: 'CoffeShop - Matte - Activation Email', // Subject line
-          html: `<b>Click Here to activate your account</b><form action='http://localhost:3005/backend5/api/v1/auth/patch/verif/${result.id}' method="post">
+          subject: 'Coffe Matte - Activation Email', // Subject line
+          html: `<b>Click Here to activate your account</b><form action='http://localhost:3005/backend5/api/v1/auth/account/verify/${result.id}' method="post">
           <button type="submit" name="your_name" value="your_value">Go</button>
       </form>` // html body
         }
@@ -61,7 +64,12 @@ module.exports = {
             console.log(`Email Sent ${result.id}: ` + info.response)
           }
         })
-        return helper.response(res, 200, `Success Register ${result.id}`, result)
+        return helper.response(
+          res,
+          200,
+          `Success Register ${result.id}`,
+          result
+        )
       }
     } catch (error) {
       // return helper.response(res, 400, 'Bad Request', error)
@@ -77,7 +85,11 @@ module.exports = {
       const getUserId = await authModel.getUserDataConditions(id)
       await authModel.updateverifiedUser(setData, id)
       if (getUserId.length > 0) {
-        return helper.response(res, 200, 'Succes User Verification')
+        return helper.response(
+          res,
+          200,
+          'Success! Your Account Has Been Verified.'
+        )
       } else {
         return helper.response(res, 404, `Data By Id ${id} Not Found`, null)
       }
@@ -90,10 +102,15 @@ module.exports = {
   login: async (req, res) => {
     try {
       const { userEmail, userPassword } = req.body
-      const isExist = await authModel.getDataCondition({ user_email: userEmail })
+      const isExist = await authModel.getDataCondition({
+        user_email: userEmail
+      })
 
       if (isExist.length > 0) {
-        const isMatch = bcrypt.compareSync(userPassword, isExist[0].user_password)
+        const isMatch = bcrypt.compareSync(
+          userPassword,
+          isExist[0].user_password
+        )
 
         if (isMatch) {
           const payLoad = isExist[0]
