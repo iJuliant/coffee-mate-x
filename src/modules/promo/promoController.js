@@ -8,6 +8,19 @@ const fs = require('fs')
 require('dotenv').config()
 
 module.exports = {
+  getDataAll: async (req, res) => {
+    try {
+      const result = await promoModel.getDataAll()
+      if (result.length > 0) {
+        // client.set(`getUserid:${id}`, JSON.stringify(result))
+        return helper.response(res, 200, 'Success Get Data All', result)
+      } else {
+        return helper.response(res, 404, 'Failed! No Data')
+      }
+    } catch (error) {
+      return helper.response(res, 400, 'Bad Request', error)
+    }
+  },
   postPromo: async (req, res) => {
     try {
       const {
@@ -33,9 +46,10 @@ module.exports = {
       }
       console.log(setData)
       const result = await promoModel.createData(setData)
-      return helper.response(res, 200, 'Succes Create Product', result)
+      return helper.response(res, 200, 'Succes Create Promo', result)
     } catch (error) {
-      return helper.response(res, 400, 'Bad Request', error)
+      // return helper.response(res, 400, 'Bad Request', error)
+      console.log(error)
     }
   },
   updateImage: async (req, res) => {
@@ -83,6 +97,25 @@ module.exports = {
       console.log(error)
     }
   },
+  // getDataByIdByCondition: async (req, res) => {
+  //   try {
+  //     const { id, idd } = req.params
+  //     // const resultpromo = await promoModel.getDataById(id)
+  //     const resultproduct = await promoModel.getDataByIdCondition(id, idd)
+  //     if (resultproduct.length > 0) {
+  //       // if (resultpromo[0].promo_type === resultproduct[0].product_category) {
+  //       // console.log('ucces')
+  //       // }
+  //       return helper.response(res, 200, 'Success Get Promo', resultproduct)
+  //       // client.set(`getUserid:${id}`, JSON.stringify(result))
+  //     } else {
+  //       return helper.response(res, 404, 'Failed! Promo Tidak Sesuai')
+  //     }
+  //   } catch (error) {
+  //     // return helper.response(res, 400, 'Bad Request', error)
+  //     console.log(error)
+  //   }
+  // },
   updateData: async (req, res) => {
     try {
       const { id } = req.params

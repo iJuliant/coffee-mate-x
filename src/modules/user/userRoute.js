@@ -5,14 +5,19 @@ const uploadFile = require('../../middlewares/uploads')
 const userController = require('./userController')
 
 Route.get(
-  '/:id',
-  userController.getDataById)
+  '/',
+  userController.getDataAll
+)
+Route.get(
+  '/by-id/:id',
+  userController.getDataById
+)
 Route.patch(
   '/img/:id',
   uploadFile,
   userController.updateImage)
 Route.patch(
-  '/ling/lung/:id',
+  '/update-profile/:id',
   uploadFile,
   // authMiddleware.authentication,
   // redisMiddleware.clearDataUserId,

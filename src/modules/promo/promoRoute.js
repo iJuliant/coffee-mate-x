@@ -5,8 +5,17 @@ const uploadFile = require('../../middlewares/uploads')
 const promoController = require('./promoController')
 
 Route.get(
-  '/:id',
-  promoController.getDataById)
+  '/',
+  promoController.getDataAll
+)
+Route.get(
+  '/by-id/:id',
+  promoController.getDataById
+)
+// Route.get(
+//   '/by-product/:id/wu/:idd',
+//   promoController.getDataByIdByCondition
+// )
 Route.patch(
   '/img/:id',
   uploadFile,
