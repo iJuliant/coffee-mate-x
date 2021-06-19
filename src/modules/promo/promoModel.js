@@ -19,28 +19,6 @@ module.exports = {
       )
     })
   },
-  // getDataByProductId: (idd) => {
-  //   return new Promise((resolve, reject) => {
-  //     connection.query('SELECT * FROM product WHERE product_id = ?',
-  //       idd, (error, result) => {
-  //         // console.log(error)
-  //         // console.log(result)
-  //         !error ? resolve(result) : reject(new Error(error))
-  //       }
-  //     )
-  //   })
-  // },
-  // getDataByIdCondition: (id, idd) => {
-  //   return new Promise((resolve, reject) => {
-  //     connection.query(`SELECT promo.promo_name, promo.promo_discount, promo.promo_desc, promo.promo_code, promo.promo_expire_end, product.product_name, product.product_image FROM promo INNER JOIN product ON promo.promo_type = product.product_category where promo.promo_id = ${id} AND product.product_id = ${idd}`,
-  //       [id, idd], (error, result) => {
-  //         // console.log(error)
-  //         // console.log(result)
-  //         !error ? resolve(result) : reject(new Error(error))
-  //       }
-  //     )
-  //   })
-  // },
   updateData: (setData, id) => {
     return new Promise((resolve, reject) => {
       connection.query(

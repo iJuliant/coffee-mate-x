@@ -12,16 +12,12 @@ Route.get(
   '/by-id/:id',
   promoController.getDataById
 )
-// Route.get(
-//   '/by-product/:id/wu/:idd',
-//   promoController.getDataByIdByCondition
-// )
 Route.patch(
   '/img/:id',
   uploadFile,
   promoController.updateImage)
 Route.patch(
-  '/ling/lung/:id',
+  '/update-promo/:id',
   uploadFile,
   // authMiddleware.authentication,
   // redisMiddleware.clearDataUserId,
