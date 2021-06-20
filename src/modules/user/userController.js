@@ -59,13 +59,16 @@ module.exports = {
       const { id } = req.params
       const getDataId = await userModel.getDataById(id)
       // console.log(getDataId[0])
-      let { userName, userPhone, userAddress, userGender, userBirth } = req.body
+      let { userDisplay, userName, userPhone, userAddress, userGender, userBirth } = req.body
       console.log(req.body)
       if (userName === '') {
         userName = getDataId[0].user_name
       }
       if (userPhone === '') {
         userPhone = getDataId[0].user_phone
+      }
+      if (userDisplay === '') {
+        userDisplay = getDataId[0].user_display_name
       }
       if (userAddress === '') {
         userAddress = getDataId[0].user_address
@@ -82,6 +85,7 @@ module.exports = {
 
       const setData = {
         user_name: userName,
+        user_display_name: userDisplay,
         user_phone: userPhone,
         user_address: userAddress,
         user_gender: userGender,
