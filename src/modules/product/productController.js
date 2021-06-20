@@ -165,12 +165,20 @@ module.exports = {
   deleteProduct: async (req, res) => {
     try {
       const { id } = req.params
-
       const isExist = await productModel.getDataById(id)
-
       if (isExist.length === 0) {
         return helper.response(res, 404, 'Cannot delete empty data')
       } else {
+        if (isExist.length > 0) {
+          const imageToDelete = isExist[0].product_image
+          const isImageExist = fs.existsSync(`src/uploads/${imageToDelete}`)
+
+          if (isImageExist && imageToDelete) {
+            fs.unlink(`src/uploads/${imageToDelete}`, (err) => {
+              if (err) throw err
+            })
+          }
+        }
         const result = await productModel.deleteData(id)
 
         return helper.response(
