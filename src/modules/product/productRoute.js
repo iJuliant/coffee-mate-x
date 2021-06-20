@@ -4,9 +4,9 @@ const uploadFile = require('../../middlewares/uploads')
 const productController = require('./productController')
 const { authentication, isAdmin } = require('../../middlewares/auth')
 
-Route.get('/', authentication, productController.getDataAll)
+Route.get('/', productController.getDataAll)
 
-Route.get('/by-id/:id', authentication, productController.getDataById)
+Route.get('/by-id/:id', productController.getDataById)
 
 Route.patch(
   '/img/:id',

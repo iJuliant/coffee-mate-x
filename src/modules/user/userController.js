@@ -51,6 +51,35 @@ module.exports = {
       console.log(error)
     }
   },
+  deleteImage: async (req, res) => {
+    try {
+      const { id } = req.params
+      const dataToUpdate = await userModel.getDataById(id)
+      if (dataToUpdate.length > 0) {
+        if (dataToUpdate.length > 0) {
+          const imageToDelete = dataToUpdate[0].user_image
+          const isImageExist = fs.existsSync(`src/uploads/${imageToDelete}`)
+
+          if (isImageExist && imageToDelete) {
+            fs.unlink(`src/uploads/${imageToDelete}`, (err) => {
+              if (err) throw err
+            })
+          }
+        }
+        const setData = {
+          user_image: '',
+          user_updated_at: new Date(Date.now())
+        }
+        const result = await userModel.updateData(setData, id)
+        return helper.response(res, 200, 'Success Delete Image', result)
+      } else {
+        return helper.response(res, 404, 'Failed! No Image Is Updated')
+      }
+    } catch (error) {
+      // return helper.response(res, 400, 'Bad Request', error)
+      console.log(error)
+    }
+  },
   getDataById: async (req, res) => {
     try {
       const { id } = req.params
@@ -71,7 +100,15 @@ module.exports = {
       const { id } = req.params
       const getDataId = await userModel.getDataById(id)
       // console.log(getDataId[0])
-      let { userDisplay, userEmail, userName, userPhone, userAddress, userGender, userBirth } = req.body
+      let {
+        userDisplay,
+        userEmail,
+        userName,
+        userPhone,
+        userAddress,
+        userGender,
+        userBirth
+      } = req.body
       console.log(req.body)
       if (userName === '') {
         userName = getDataId[0].user_name
