@@ -61,7 +61,12 @@ module.exports = {
             console.log(`Email Sent ${result.id}: ` + info.response)
           }
         })
-        return helper.response(res, 200, `Success Register ${result.id}`, result)
+        return helper.response(
+          res,
+          200,
+          `Success Register ${result.id}`,
+          result
+        )
       }
     } catch (error) {
       // return helper.response(res, 400, 'Bad Request', error)
@@ -90,10 +95,15 @@ module.exports = {
   login: async (req, res) => {
     try {
       const { userEmail, userPassword } = req.body
-      const isExist = await authModel.getDataCondition({ user_email: userEmail })
+      const isExist = await authModel.getDataCondition({
+        user_email: userEmail
+      })
 
       if (isExist.length > 0) {
-        const isMatch = bcrypt.compareSync(userPassword, isExist[0].user_password)
+        const isMatch = bcrypt.compareSync(
+          userPassword,
+          isExist[0].user_password
+        )
 
         if (isMatch) {
           const payLoad = isExist[0]
