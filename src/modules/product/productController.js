@@ -37,18 +37,53 @@ module.exports = {
         productName,
         productPrice,
         productCategory,
-        productDesc
+        productDesc,
+        productSize
       } = req.body
       const setData = {
         product_name: productName,
-        product_base_price: productPrice,
+        product_base_price: parseInt(productPrice),
         product_category: productCategory,
         product_desc: productDesc,
+        product_size: productSize
+      }
+      // console.log(setData)
+      const result = await productModel.createData(setData)
+      // console.log(result)
+      return helper.response(res, 200, 'Succes Create Product', result)
+    } catch (error) {
+      console.log(error)
+      return helper.response(res, 400, 'Bad Request', error)
+    }
+  },
+  updateProduct: async (req, res) => {
+    try {
+      const { id } = req.params
+      const {
+        productName,
+        productPrice,
+        productCategory,
+        productDesc,
+        productSize
+      } = req.body
+      const setData = {
+        product_name: productName,
+        product_base_price: parseInt(productPrice),
+        product_category: productCategory,
+        product_desc: productDesc,
+        product_size: productSize,
         product_updated_at: new Date(Date.now())
       }
-      console.log(setData)
-      const result = await productModel.createData(setData)
-      return helper.response(res, 200, 'Succes Create Product', result)
+      const dataToUpdate = await productModel.getDataById(id)
+      if (dataToUpdate.length > 0) {
+        // console.log(setData)
+        const result = await productModel.updateData(setData, id)
+
+        // console.log(result)
+        return helper.response(res, 200, 'Succes Create Product', result)
+      } else {
+        return helper.response(res, 404, 'Failed! Data not Found')
+      }
     } catch (error) {
       console.log(error)
       return helper.response(res, 400, 'Bad Request', error)
@@ -89,8 +124,8 @@ module.exports = {
     try {
       let { page, limit, category, orderBy } = req.query
 
-      page = page ? +page : page = 1
-      limit = limit ? +limit : limit = 5
+      page = page ? +page : (page = 1)
+      limit = limit ? +limit : (limit = 5)
       if (!orderBy) {
         orderBy = 'ASC'
       }
@@ -103,12 +138,23 @@ module.exports = {
         limit,
         totalData
       }
-      const result = await productModel.getDataByCategory(category, limit, offset, orderBy)
+      const result = await productModel.getDataByCategory(
+        category,
+        limit,
+        offset,
+        orderBy
+      )
 
       if (result.length === 0) {
         return helper.response(res, 404, `No data found for ${category}`)
       } else {
-        return helper.response(res, 200, 'Success get data by category', result, pageInfo)
+        return helper.response(
+          res,
+          200,
+          'Success get data by category',
+          result,
+          pageInfo
+        )
       }
     } catch (error) {
       console.log(req.query)
@@ -127,7 +173,12 @@ module.exports = {
       } else {
         const result = await productModel.deleteData(id)
 
-        return helper.response(res, 200, `Success delete product id ${id}`, result)
+        return helper.response(
+          res,
+          200,
+          `Success delete product id ${id}`,
+          result
+        )
       }
     } catch (error) {
       console.log(error)

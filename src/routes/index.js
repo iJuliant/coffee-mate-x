@@ -3,6 +3,8 @@ const Router = express.Router()
 
 const authRoutes = require('../modules/auth/authRoute')
 const userRoutes = require('../modules/user/userRoute')
+const promoRoutes = require('../modules/promo/promoRoute')
+const cartRoutes = require('../modules/cart/cartRoute')
 const productRoutes = require('../modules/product/productRoute')
 
 // Router.use('/', (req, res) => {
@@ -10,6 +12,8 @@ const productRoutes = require('../modules/product/productRoute')
 // })
 Router.use('/auth', authRoutes)
 Router.use('/user', userRoutes)
+Router.use('/promo', promoRoutes)
+Router.use('/cart', cartRoutes)
 Router.use('/product', productRoutes)
 
 module.exports = Router

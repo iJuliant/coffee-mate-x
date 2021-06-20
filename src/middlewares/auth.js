@@ -2,7 +2,6 @@ const helper = require('../helpers/wrapper')
 const jwt = require('jsonwebtoken')
 
 module.exports = {
-
   authentication: (req, res, next) => {
     let token = req.headers.authorization
     if (token) {
@@ -38,8 +37,11 @@ module.exports = {
     if (req.decodeToken.user_verified !== '0') {
       next()
     } else {
-      return helper.response(res, 401, 'Please check your email to verify your account first')
+      return helper.response(
+        res,
+        401,
+        'Please check your email to verify your account first'
+      )
     }
   }
-
 }

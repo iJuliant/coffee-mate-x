@@ -2,37 +2,38 @@ const express = require('express')
 const Route = express.Router()
 const uploadFile = require('../../middlewares/uploads')
 const productController = require('./productController')
+const { authentication, isAdmin } = require('../../middlewares/auth')
 
-Route.get(
-  '/',
-  productController.getDataAll
-)
+Route.get('/', productController.getDataAll)
 
-Route.get(
-  '/by-id/:id',
-  productController.getDataById
-)
+Route.get('/by-id/:id', productController.getDataById)
 
 Route.patch(
   '/img/:id',
+  authentication,
+  isAdmin,
   uploadFile,
   productController.updateImage
 )
 
 Route.post(
   '/',
+  authentication,
+  isAdmin,
   uploadFile,
   productController.postProduct
 )
 
-Route.get(
-  '/category/',
-  productController.getCategory
+Route.patch(
+  '/:id',
+  authentication,
+  isAdmin,
+  uploadFile,
+  productController.updateProduct
 )
 
-Route.delete(
-  '/:id',
-  productController.deleteProduct
-)
+Route.get('/category/', authentication, productController.getCategory)
+
+Route.delete('/:id', authentication, isAdmin, productController.deleteProduct)
 
 module.exports = Route
