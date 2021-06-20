@@ -7,8 +7,9 @@ Route.get(
   '/',
   productController.getDataAll)
 Route.get(
-  '/:id',
-  productController.getDataById)
+  '/by-id/:id',
+  productController.getDataById
+)
 Route.patch(
   '/img/:id',
   uploadFile,
