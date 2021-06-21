@@ -21,7 +21,7 @@ Route.patch(
 )
 Route.patch(
   '/update-password/:id',
-  authentication,
+  // authentication,
   userController.updatePasswordUser
 )
 

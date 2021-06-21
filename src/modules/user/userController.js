@@ -177,7 +177,7 @@ module.exports = {
           return helper.response(
             res,
             401,
-            'Can not change, new password same with old password. Please enter different input !'
+            'Failed to change. You put the same password as your old. Please enter different input!'
           )
         } else {
           const salt = bcrypt.genSaltSync(10)
@@ -186,7 +186,7 @@ module.exports = {
             return helper.response(
               res,
               401,
-              'New Password and Confirm Password not same, please check again!'
+              "New and confirm password didn't match. Please check again!"
             )
           } else {
             const setData = {
@@ -194,8 +194,12 @@ module.exports = {
             }
             const result = await userModel.updateData(setData, id)
             delete result.user_password
-            console.log('Success Change Password !')
-            return helper.response(res, 200, 'Success Change Password', result)
+            return helper.response(
+              res,
+              200,
+              'Success... Your password has changed!',
+              result
+            )
           }
         }
       }
