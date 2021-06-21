@@ -6,24 +6,21 @@ require('dotenv').config()
 module.exports = {
   postCart: async (req, res) => {
     try {
-      const {
-        userId,
-        productId,
-        productPrice,
-        productQty
-      } = req.body
+      const { userId, productId, productPrice, productQty, productSize } =
+        req.body
       const setData = {
         user_id: userId,
         product_id: productId,
-        product_qty: productQty,
-        product_sub_total: productPrice * productQty
+        product_qty: parseInt(productQty),
+        product_sub_total: parseInt(productPrice) * parseInt(productQty),
+        product_size: productSize
       }
       console.log(setData)
       const result = await cartModel.createData(setData)
       return helper.response(res, 200, 'Succes Create Cart', result)
     } catch (error) {
-      // return helper.response(res, 400, 'Bad Request', error)
-      console.log(error)
+      return helper.response(res, 400, 'Bad Request', error)
+      // console.log(error)
     }
   },
   getDataByIdUser: async (req, res) => {
