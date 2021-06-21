@@ -164,34 +164,43 @@ module.exports = {
     try {
       const { id } = req.params
       const { userNewPassword, userConfirmPassword } = req.body
-      if (!userNewPassword || !userConfirmPassword) {
+      if (userNewPassword === '' || userConfirmPassword === '') {
         return helper.response(res, 401, 'Please input field!')
       } else {
-        const salt = bcrypt.genSaltSync(10)
-        const encryptPassword = bcrypt.hashSync(userNewPassword, salt)
-        if (userNewPassword !== userConfirmPassword) {
+        const checkPassword = await userModel.getDataById(id)
+        const comparePassword = bcrypt.compareSync(
+          userNewPassword,
+          checkPassword[0].user_password
+        )
+        // console.log(checkPassword, comparePassword)
+        if (comparePassword) {
           return helper.response(
             res,
             401,
-            'New Password and Confirm Password not same, please check again!'
+            'Can not change, new password same with old password. Please enter different input !'
           )
         } else {
-          const setData = {
-            user_password: encryptPassword
+          const salt = bcrypt.genSaltSync(10)
+          const encryptPassword = bcrypt.hashSync(userNewPassword, salt)
+          if (userNewPassword !== userConfirmPassword) {
+            return helper.response(
+              res,
+              401,
+              'New Password and Confirm Password not same, please check again!'
+            )
+          } else {
+            const setData = {
+              user_password: encryptPassword
+            }
+            const result = await userModel.updateData(setData, id)
+            delete result.user_password
+            console.log('Success Change Password !')
+            return helper.response(res, 200, 'Success Change Password', result)
           }
-          const result = await userModel.updateData(setData, id)
-          delete result.user_password
-          console.log('Sucess Update New Password !')
-          return helper.response(
-            res,
-            200,
-            'Success Update New Password',
-            result
-          )
         }
       }
     } catch (error) {
-      console.log(error)
+      // console.log(error)
       return helper.response(res, 408, 'Bad Request', error)
     }
   }
