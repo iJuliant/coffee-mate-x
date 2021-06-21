@@ -18,11 +18,18 @@ const fileFilter = (req, file, cb) => {
   if (listExt.includes(ext)) {
     cb(null, true)
   } else {
-    cb(new Error('Extension file harus jpg/png !'), false)
+    cb(
+      new Error('Only accepts image files with jpg, jpeg or png extension!'),
+      false
+    )
   }
 }
 
-const upload = multer({ storage, fileFilter, limits: { fileSize: 1024 * 1024 } }).single('imageUser')
+const upload = multer({
+  storage,
+  fileFilter,
+  limits: { fileSize: 1024 * 1024 }
+}).single('imageUser')
 
 const uploadFilter = (req, res, next) => {
   upload(req, res, function (err) {
