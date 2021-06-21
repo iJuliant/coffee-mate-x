@@ -1,5 +1,5 @@
 const helper = require('../../helpers/wrapper')
-// const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt')
 // const jwt = require('jsonwebtoken')
 const userModel = require('./userModel')
 // const nodemailer = require('nodemailer')
@@ -158,6 +158,41 @@ module.exports = {
     } catch (error) {
       return helper.response(res, 400, 'Bad Request', error)
       // console.log(error)
+    }
+  },
+  updatePasswordUser: async (req, res) => {
+    try {
+      const { id } = req.params
+      const { userNewPassword, userConfirmPassword } = req.body
+      if (!userNewPassword || !userConfirmPassword) {
+        return helper.response(res, 401, 'Please input field!')
+      } else {
+        const salt = bcrypt.genSaltSync(10)
+        const encryptPassword = bcrypt.hashSync(userNewPassword, salt)
+        if (userNewPassword !== userConfirmPassword) {
+          return helper.response(
+            res,
+            401,
+            'New Password and Confirm Password not same, please check again!'
+          )
+        } else {
+          const setData = {
+            user_password: encryptPassword
+          }
+          const result = await userModel.updateData(setData, id)
+          delete result.user_password
+          console.log('Sucess Update New Password !')
+          return helper.response(
+            res,
+            200,
+            'Success Update New Password',
+            result
+          )
+        }
+      }
+    } catch (error) {
+      console.log(error)
+      return helper.response(res, 408, 'Bad Request', error)
     }
   }
 }
