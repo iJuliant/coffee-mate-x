@@ -14,7 +14,8 @@ module.exports = {
   },
   getAllWithSorting: (orderBy) => {
     return new Promise((resolve, reject) => {
-      connection.query(`SELECT * FROM product ORDER BY product_name ${orderBy}`,
+      connection.query(
+        `SELECT * FROM product ORDER BY product_name ${orderBy}`,
         (error, result) => {
           !error ? resolve(result) : reject(new Error(error))
         }
@@ -23,7 +24,8 @@ module.exports = {
   },
   searchData: (keyword, orderBy) => {
     return new Promise((resolve, reject) => {
-      connection.query(`SELECT * FROM product WHERE product_name LIKE ? ORDER BY ${orderBy}`,
+      connection.query(
+        `SELECT * FROM product WHERE product_name LIKE ? ORDER BY ${orderBy}`,
         [keyword],
         (error, result) => {
           !error ? resolve(result) : reject(new Error(error))
@@ -86,7 +88,7 @@ module.exports = {
   getDataByCategory: (keyword, category, limit, offset, orderBy) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        `SELECT * FROM product WHERE product_name LIKE "%"?"%" AND product_category = ? ORDER BY ${orderBy} LIMIT ? OFFSET ?`,
+        `SELECT * FROM product WHERE product_name LIKE "%"?"%" AND product_category LIKE "%"?"%" ORDER BY ${orderBy} LIMIT ? OFFSET ?`,
         [keyword, category, limit, offset],
         (error, result) => {
           !error ? resolve(result) : reject(new Error(error))
@@ -97,7 +99,7 @@ module.exports = {
   countData: (keyword, category) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        'SELECT COUNT(*) AS total FROM product WHERE product_name LIKE "%"?"%" AND product_category = ?',
+        'SELECT COUNT(*) AS total FROM product WHERE product_name LIKE "%"?"%" AND product_category LIKE "%"?"%"',
         [keyword, category],
         (error, result) => {
           !error ? resolve(result[0].total) : reject(new Error(error))
