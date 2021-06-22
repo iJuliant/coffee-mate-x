@@ -19,6 +19,17 @@ module.exports = {
       )
     })
   },
+  getPromoByCode: (code) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        'SELECT * FROM promo WHERE promo_code = ?',
+        code,
+        (error, result) => {
+          !error ? resolve(result) : reject(new Error(error))
+        }
+      )
+    })
+  },
   updateData: (setData, id) => {
     return new Promise((resolve, reject) => {
       connection.query(

@@ -1,11 +1,34 @@
 const connection = require('../../config/mysql')
 
 module.exports = {
-  getDataAll: () => {
+  getDataAll: (limit, offset, keyword, sort) => {
     return new Promise((resolve, reject) => {
-      connection.query('SELECT * fROM product', (error, result) => {
-        !error ? resolve(result) : reject(new Error(error))
-      })
+      connection.query(
+        `SELECT * fROM product WHERE product_name LIKE ? ORDER BY ${sort} LIMIT ? OFFSET ?`,
+        [keyword, limit, offset],
+        (error, result) => {
+          !error ? resolve(result) : reject(new Error(error))
+        }
+      )
+    })
+  },
+  getAllWithSorting: (orderBy) => {
+    return new Promise((resolve, reject) => {
+      connection.query(`SELECT * FROM product ORDER BY product_name ${orderBy}`,
+        (error, result) => {
+          !error ? resolve(result) : reject(new Error(error))
+        }
+      )
+    })
+  },
+  searchData: (keyword, orderBy) => {
+    return new Promise((resolve, reject) => {
+      connection.query(`SELECT * FROM product WHERE product_name LIKE ? ORDER BY ${orderBy}`,
+        [keyword],
+        (error, result) => {
+          !error ? resolve(result) : reject(new Error(error))
+        }
+      )
     })
   },
   getDataById: (id) => {

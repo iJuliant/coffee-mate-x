@@ -3,10 +3,15 @@ const Route = express.Router()
 const uploadFile = require('../../middlewares/uploads')
 const productController = require('./productController')
 const { authentication, isAdmin } = require('../../middlewares/auth')
+// const redisMiddleware = require('../../middlewares/redis')
 
-Route.get('/', productController.getDataAll)
+// Route.get('/', productController.getDataAll)
 
 Route.get('/by-id/:id', productController.getDataById)
+Route.get(
+  '/',
+  productController.getAllProduct
+)
 
 Route.patch(
   '/img/:id',
