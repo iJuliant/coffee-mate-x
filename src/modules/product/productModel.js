@@ -1,30 +1,22 @@
 const connection = require('../../config/mysql')
 
 module.exports = {
-  getDataAll: (limit, offset, keyword, sort) => {
+  getDataAll: (limit, offset, keyword, sort, category) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        `SELECT * fROM product WHERE product_name LIKE ? ORDER BY ${sort} LIMIT ? OFFSET ?`,
-        [keyword, limit, offset],
+        `SELECT * FROM product WHERE product_name LIKE ? AND product_category LIKE ? ORDER BY ${sort} LIMIT ? OFFSET ?`,
+        [keyword, category, limit, offset],
         (error, result) => {
           !error ? resolve(result) : reject(new Error(error))
         }
       )
     })
   },
-  getAllWithSorting: (orderBy) => {
+  getDataCount: (keyword, category, sort) => {
     return new Promise((resolve, reject) => {
-      connection.query(`SELECT * FROM product ORDER BY product_name ${orderBy}`,
-        (error, result) => {
-          !error ? resolve(result) : reject(new Error(error))
-        }
-      )
-    })
-  },
-  searchData: (keyword, orderBy) => {
-    return new Promise((resolve, reject) => {
-      connection.query(`SELECT * FROM product WHERE product_name LIKE ? ORDER BY ${orderBy}`,
-        [keyword],
+      connection.query(
+        `SELECT COUNT(*) AS total FROM product WHERE product_name LIKE ? AND product_category LIKE ? ORDER BY ${sort}`,
+        [keyword, category],
         (error, result) => {
           !error ? resolve(result) : reject(new Error(error))
         }
@@ -44,20 +36,24 @@ module.exports = {
   },
   createData: (setData) => {
     return new Promise((resolve, reject) => {
-      connection.query('INSERT INTO product SET ?', setData, (error, result) => {
-        // !error ? resolve({id: result.inserId, ...setData}) : reject(new Error(error))
-        // console.log(error);
-        if (!error) {
-          const newResult = {
-            id: result.insertId,
-            ...setData
+      connection.query(
+        'INSERT INTO product SET ?',
+        setData,
+        (error, result) => {
+          // !error ? resolve({id: result.inserId, ...setData}) : reject(new Error(error))
+          // console.log(error);
+          if (!error) {
+            const newResult = {
+              id: result.insertId,
+              ...setData
+            }
+            resolve(newResult)
+          } else {
+            // console.log(error)
+            reject(new Error(error))
           }
-          resolve(newResult)
-        } else {
-          // console.log(error)
-          reject(new Error(error))
         }
-      })
+      )
     })
   },
   updateData: (setData, id) => {
@@ -79,41 +75,13 @@ module.exports = {
       )
     })
   },
-  getDataByCategory: (category, limit, offset, orderBy) => {
-    return new Promise((resolve, reject) => {
-      connection.query(
-        `SELECT * FROM product WHERE product_category = ? ORDER BY product_name ${orderBy} LIMIT ? OFFSET ?`,
-        [category, limit, offset],
-        (error, result) => {
-          !error
-            ? resolve(result)
-            : reject(new Error(error))
-        }
-      )
-    })
-  },
-  countData: (category) => {
-    return new Promise((resolve, reject) => {
-      connection.query(
-        'SELECT COUNT(*) AS total FROM product WHERE product_category = ?',
-        category,
-        (error, result) => {
-          !error
-            ? resolve(result[0].total)
-            : reject(new Error(error))
-        }
-      )
-    })
-  },
   deleteData: (id) => {
     return new Promise((resolve, reject) => {
       connection.query(
         'DELETE from product WHERE product_id = ?',
         id,
         (error, result) => {
-          !error
-            ? resolve(result)
-            : reject(new Error(error))
+          !error ? resolve(result) : reject(new Error(error))
         }
       )
     })
