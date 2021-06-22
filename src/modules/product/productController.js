@@ -1,6 +1,4 @@
 const helper = require('../../helpers/wrapper')
-// const bcrypt = require('bcrypt')
-// const jwt = require('jsonwebtoken')
 const productModel = require('./productModel')
 // const redis = require('redis')
 // const client = redis.createClient()
@@ -11,14 +9,15 @@ require('dotenv').config()
 module.exports = {
   getAllProduct: async (req, res) => {
     try {
-      let { page, lim, sort, keyword } = req.query
+      let { page, lim, sort, keyword, category } = req.query
       lim = lim ? +lim : 3
       page = page ? +page : 1
       keyword = `%${keyword}%` || '%'
-      console.log(keyword)
       sort = sort || 'product_name ASC'
+      category = `%${category}%` || '%'
       const offset = page * lim - lim
-      const totalData = productModel.countData(keyword)
+      const dataCount = await productModel.getDataCount(keyword, category, sort)
+      const totalData = dataCount[0].total
       const totalPage = Math.ceil(totalData / lim)
       const pageInfo = {
         page,
@@ -142,6 +141,7 @@ module.exports = {
       console.log(error)
     }
   },
+
   getCategory: async (req, res) => {
     // get data by category with pagination - all data stored in query
     try {

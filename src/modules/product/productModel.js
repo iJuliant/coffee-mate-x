@@ -1,32 +1,22 @@
 const connection = require('../../config/mysql')
 
 module.exports = {
-  getDataAll: (limit, offset, keyword, sort) => {
+  getDataAll: (limit, offset, keyword, sort, category) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        `SELECT * fROM product WHERE product_name LIKE ? ORDER BY ${sort} LIMIT ? OFFSET ?`,
-        [keyword, limit, offset],
+        `SELECT * FROM product WHERE product_name LIKE ? AND product_category LIKE ? ORDER BY ${sort} LIMIT ? OFFSET ?`,
+        [keyword, category, limit, offset],
         (error, result) => {
           !error ? resolve(result) : reject(new Error(error))
         }
       )
     })
   },
-  getAllWithSorting: (orderBy) => {
+  getDataCount: (keyword, category, sort) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        `SELECT * FROM product ORDER BY product_name ${orderBy}`,
-        (error, result) => {
-          !error ? resolve(result) : reject(new Error(error))
-        }
-      )
-    })
-  },
-  searchData: (keyword, orderBy) => {
-    return new Promise((resolve, reject) => {
-      connection.query(
-        `SELECT * FROM product WHERE product_name LIKE ? ORDER BY ${orderBy}`,
-        [keyword],
+        `SELECT COUNT(*) AS total FROM product WHERE product_name LIKE ? AND product_category LIKE ? ORDER BY ${sort}`,
+        [keyword, category],
         (error, result) => {
           !error ? resolve(result) : reject(new Error(error))
         }
