@@ -5,11 +5,7 @@ const authMiddleware = require('../../middlewares/auth')
 
 const promoController = require('./promoController')
 
-Route.get(
-  '/',
-  authMiddleware.authentication,
-  promoController.getDataAll
-)
+Route.get('/', authMiddleware.authentication, promoController.getDataAll)
 Route.get(
   '/by-id/:id',
   authMiddleware.authentication,
@@ -17,25 +13,29 @@ Route.get(
 )
 Route.patch(
   '/img/:id',
-  uploadFile,
   authMiddleware.authentication,
-  promoController.updateImage)
+  uploadFile,
+  promoController.updateImage
+)
 Route.patch(
   '/update-promo/:id',
-  uploadFile,
   authMiddleware.authentication,
+  uploadFile,
   // redisMiddleware.clearDataUserId,
-  promoController.updateData)
+  promoController.updateData
+)
 Route.post(
   '/',
-  uploadFile,
   authMiddleware.authentication,
-  promoController.postPromo)
+  uploadFile,
+  promoController.postPromo
+)
 Route.delete(
   '/:id',
   authMiddleware.authentication,
   authMiddleware.isAdmin,
   // redisMiddleware.clearDataMovieRedis,
-  promoController.deletePromo)
+  promoController.deletePromo
+)
 
 module.exports = Route

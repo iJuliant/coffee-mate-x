@@ -168,15 +168,14 @@ module.exports = {
   deletePromo: async (req, res) => {
     try {
       const { id } = req.params
-      const ResultImage = await promoModel.getDataById(id)
-      console.log(ResultImage[0].promo_image)
-      if (ResultImage.length > 0) {
-        console.log(`Delete data by id = ${id}`)
-        if (ResultImage.length > 0) {
-          const imageToDelete = ResultImage[0].promo_image
+      const dataToUpdate = await promoModel.getDataById(id)
+
+      if (dataToUpdate.length > 0) {
+        if (dataToUpdate[0].promo_image) {
+          const imageToDelete = dataToUpdate[0].promo_image
           const isImageExist = fs.existsSync(`src/uploads/${imageToDelete}`)
 
-          if (isImageExist && imageToDelete) {
+          if (isImageExist) {
             fs.unlink(`src/uploads/${imageToDelete}`, (err) => {
               if (err) throw err
             })

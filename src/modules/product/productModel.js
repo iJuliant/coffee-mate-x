@@ -75,6 +75,28 @@ module.exports = {
       )
     })
   },
+  getDataByCategory: (keyword, category, limit, offset, orderBy) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        `SELECT * FROM product WHERE product_name LIKE "%"?"%" AND product_category = ? ORDER BY ${orderBy} LIMIT ? OFFSET ?`,
+        [keyword, category, limit, offset],
+        (error, result) => {
+          !error ? resolve(result) : reject(new Error(error))
+        }
+      )
+    })
+  },
+  countData: (keyword, category) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        'SELECT COUNT(*) AS total FROM product WHERE product_name LIKE "%"?"%" AND product_category = ?',
+        [keyword, category],
+        (error, result) => {
+          !error ? resolve(result[0].total) : reject(new Error(error))
+        }
+      )
+    })
+  },
   deleteData: (id) => {
     return new Promise((resolve, reject) => {
       connection.query(

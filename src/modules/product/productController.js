@@ -148,6 +148,51 @@ module.exports = {
     }
   },
 
+  getCategory: async (req, res) => {
+    // get data by category with pagination - all data stored in query
+    try {
+      let { page, limit, category, orderBy, keyword } = req.query
+
+      // keyword = keyword ? +keyword : ''
+      page = page ? +page : (page = 1)
+      limit = limit ? +limit : (limit = 5)
+      if (!orderBy) {
+        orderBy = 'product_id ASC'
+      }
+      const totalData = await productModel.countData(keyword, category)
+      const totalPage = Math.ceil(totalData / limit)
+      const offset = page * limit - limit
+      const pageInfo = {
+        page,
+        totalPage,
+        limit,
+        totalData
+      }
+      const result = await productModel.getDataByCategory(
+        keyword,
+        category,
+        limit,
+        offset,
+        orderBy
+      )
+
+      if (result.length === 0) {
+        return helper.response(res, 404, `No data found for ${category}`)
+      } else {
+        return helper.response(
+          res,
+          200,
+          'Success get data by category',
+          result,
+          pageInfo
+        )
+      }
+    } catch (error) {
+      console.log(req.query)
+      console.log(error)
+      return helper.response(res, 400, 'Bad request', error)
+    }
+  },
   deleteProduct: async (req, res) => {
     try {
       const { id } = req.params
