@@ -51,5 +51,27 @@ module.exports = {
         }
       )
     })
+  },
+  getCart: (id) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        'SELECT * FROM cart WHERE user_id = ?',
+        id,
+        (error, result) => {
+          !error ? resolve(result) : reject(new Error(error))
+        }
+      )
+    })
+  },
+  deleteCart: (id) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        'DELETE FROM cart WHERE user_id = ?',
+        id,
+        (error, result) => {
+          !error ? resolve(result) : reject(new Error(error))
+        }
+      )
+    })
   }
 }

@@ -6,6 +6,7 @@ const userRoutes = require('../modules/user/userRoute')
 const promoRoutes = require('../modules/promo/promoRoute')
 const cartRoutes = require('../modules/cart/cartRoute')
 const productRoutes = require('../modules/product/productRoute')
+const orderRoutes = require('../modules/orders/orderRoutes')
 
 // Router.use('/', (req, res) => {
 //   res.send('Hello World')
@@ -14,6 +15,7 @@ Router.use('/auth', authRoutes)
 Router.use('/user', userRoutes)
 Router.use('/promo', promoRoutes)
 Router.use('/cart', cartRoutes)
+Router.use('/order', orderRoutes)
 Router.use('/product', productRoutes)
 
 module.exports = Router
