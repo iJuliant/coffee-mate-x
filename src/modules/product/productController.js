@@ -2,17 +2,35 @@ const helper = require('../../helpers/wrapper')
 // const bcrypt = require('bcrypt')
 // const jwt = require('jsonwebtoken')
 const productModel = require('./productModel')
+const redis = require('redis')
+const client = redis.createClient()
 const fs = require('fs')
 
 require('dotenv').config()
 
 module.exports = {
-  getDataAll: async (req, res) => {
+  getAllProduct: async (req, res) => {
     try {
-      const result = await productModel.getDataAll()
-      return helper.response(res, 200, 'Succes Get All Data Product', result)
+      let { page, lim, sort, keyword } = req.query
+      lim = lim ? +lim : 3
+      page = page ? +page : 1
+      keyword = `%${keyword}%` || '%'
+      console.log(keyword)
+      sort = sort || 'product_name ASC'
+      const offset = page * lim - lim
+      const totalData = productModel.countData(keyword)
+      const totalPage = Math.ceil(totalData / lim)
+      const pageInfo = {
+        page, totalPage, lim, totalData
+      }
+      const result = await productModel.getDataAll(lim, offset, keyword, sort)
+      client.setex(
+        `getproduct:${JSON.stringify(req.query)}`, 3600, JSON.stringify({ result, pageInfo })
+      )
+
+      return helper.response(res, 200, 'Success get data', result)
     } catch (error) {
-      return helper.response(res, 400, 'Bad Request', error)
+      return helper.response(res, 400, 'Bad request')
     }
   },
   getDataById: async (req, res) => {
