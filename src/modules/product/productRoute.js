@@ -32,6 +32,8 @@ Route.patch(
   productController.updateProduct
 )
 
+Route.get('/category/', authentication, productController.getCategory)
+
 Route.delete('/:id', authentication, isAdmin, productController.deleteProduct)
 
 module.exports = Route
