@@ -62,7 +62,6 @@ module.exports = {
       )
     })
   },
-
   updateOrder: (setData, id) => {
     return new Promise((resolve, reject) => {
       connection.query(
