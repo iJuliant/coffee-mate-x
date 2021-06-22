@@ -1,7 +1,7 @@
 const express = require('express')
 const Route = express.Router()
 const uploadFile = require('../../middlewares/uploads')
-const { authentication, isAdmin } = require('../../middlewares/auth')
+const { authentication } = require('../../middlewares/auth')
 const userController = require('./userController')
 const redisMiddleware = require('../../middlewares/redis')
 
