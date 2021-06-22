@@ -122,14 +122,15 @@ module.exports = {
   getCategory: async (req, res) => {
     // get data by category with pagination - all data stored in query
     try {
-      let { page, limit, category, orderBy } = req.query
+      let { page, limit, category, orderBy, keyword } = req.query
 
+      // keyword = keyword ? +keyword : ''
       page = page ? +page : (page = 1)
       limit = limit ? +limit : (limit = 5)
       if (!orderBy) {
-        orderBy = 'ASC'
+        orderBy = 'product_id ASC'
       }
-      const totalData = await productModel.countData(category)
+      const totalData = await productModel.countData(keyword, category)
       const totalPage = Math.ceil(totalData / limit)
       const offset = page * limit - limit
       const pageInfo = {
@@ -139,6 +140,7 @@ module.exports = {
         totalData
       }
       const result = await productModel.getDataByCategory(
+        keyword,
         category,
         limit,
         offset,
