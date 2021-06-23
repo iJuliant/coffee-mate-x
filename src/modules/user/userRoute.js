@@ -7,17 +7,13 @@ const redisMiddleware = require('../../middlewares/redis')
 
 Route.get(userController.getDataAll)
 
-Route.get('/by-id/:id',
+Route.get(
+  '/by-id/:id',
   redisMiddleware.getProductByIdRedis,
-  userController.getDataById)
-
-Route.patch(
-  '/img/:id',
-  authentication,
-  // isAdmin,
-  uploadFile,
-  userController.updateImage
+  userController.getDataById
 )
+
+Route.patch('/img/:id', authentication, uploadFile, userController.updateImage)
 
 Route.patch(
   '/delete-img/:id',
