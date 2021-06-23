@@ -128,5 +128,52 @@ module.exports = {
     } catch (error) {
       return helper.response(res, 400, 'Bad request.', error)
     }
+  },
+
+  reqOtp: async (req, res) => {
+    try {
+      const { email } = req.body
+      const otp = Math.floor(1000 + Math.random() * 9000)
+      const isExist = await authModel.getDataCondition({ user_email: email })
+
+      if (isExist.length > 0) {
+        const id = isExist[0].user_id
+        const setData = {
+          user_otp: otp,
+          user_updated_at: new Date(Date.now())
+        }
+
+        const result = await authModel.updateUser(setData, id)
+        return helper.response(res, 200, 'OTP Sent', result)
+      } else {
+        return helper.response(res, 404, 'Email not registered')
+      }
+    } catch (error) {
+      return helper.response(res, 400, 'Bad request', error)
+    }
+  },
+
+  resetPassword: async (req, res) => {
+    try {
+      const { email, newPassword, otp } = req.body
+      const user = await authModel.getDataCondition({ user_email: email })
+      const timeSpan = Math.ceil((new Date(Date.now()) - user[0].user_updated_at) / 60000)
+
+      if (+otp === +user[0].user_otp && timeSpan <= 10) {
+        const salt = bcrypt.genSaltSync(10)
+        const encryptPassword = bcrypt.hashSync(newPassword, salt)
+        const setData = {
+          user_password: encryptPassword,
+          user_updated_at: new Date(Date.now())
+        }
+        const result = await authModel.updateUser(setData, user[0].user_id)
+
+        return helper.response(res, 200, 'Success change password', result)
+      } else {
+        return helper.response(res, 300, 'Otp expired or mismatch')
+      }
+    } catch (error) {
+      return helper.response(res, 400, 'Bad request', error)
+    }
   }
 }
