@@ -143,6 +143,29 @@ module.exports = {
           user_updated_at: new Date(Date.now())
         }
 
+        const transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+            user: process.env.USER_EMAIL,
+            pass: process.env.USER_PASS
+          }
+        })
+
+        const mailOptions = {
+          from: 'Coffee Mate Team',
+          to: isExist[0].user_email,
+          subject: 'OTP to change your password',
+          html: `
+          <h1>Hello</h1>
+          <p>We noticed that you are requesting to change your password.</p>
+          <p>Please use ${otp} to change your password and let no one know about it.</p>`
+        }
+
+        transporter.sendMail(mailOptions, (err, info) => {
+          if (err) throw err
+          console.log('Email sent' + info.response)
+        })
+
         const result = await authModel.updateUser(setData, id)
         return helper.response(res, 200, 'OTP Sent', result)
       } else {
