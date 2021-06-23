@@ -57,6 +57,7 @@ module.exports = {
     })
   },
   updateData: (setData, id) => {
+    // console.log(setData)
     return new Promise((resolve, reject) => {
       connection.query(
         'UPDATE product SET ? WHERE product_id = ?',
