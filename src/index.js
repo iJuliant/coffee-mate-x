@@ -16,6 +16,11 @@ app.use(cors())
 app.options('*', cors()) // all access cors.
 app.use(helmet())
 app.use(morgan('dev'))
+
+app.get("/", (req, res) => {
+  res.send('Hello world')
+})
+
 app.use('/backend5/api/v1', routerNavigation)
 app.use('/backend5/api', express.static('src/uploads'))
 
