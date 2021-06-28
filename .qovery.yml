@@ -1,0 +1,15 @@
+---
+application:
+  name: "coffee-mate-x"
+  project: "coffee-mate"
+  organization: "QoveryCommunity"
+databases:
+- type: "MYSQL"
+  name: "coffee_mate"
+  version: "5.6"
+routers:
+- name: "main-coffee-mate-x"
+  routes:
+  - application_name: "coffee-mate-x"
+    paths:
+    - "/*"
